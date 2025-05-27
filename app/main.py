@@ -6,6 +6,10 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from . import models, schemas, crud, dependencies
 from .database import engine
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 models.Base.metadata.create_all(bind=engine)
 
