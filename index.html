@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Прогноз погоды</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    input { width: 300px; padding: 8px; font-size: 16px; }
+    ul { list-style: none; padding: 0; margin: 0; border: 1px solid #ccc; max-width: 300px; }
+    li { padding: 8px; cursor: pointer; }
+    li:hover { background-color: #f0f0f0; }
+    #forecast { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Прогноз погоды</h1>
+  <input type="text" id="city-input" placeholder="Введите название города..." autocomplete="off" />
+  <ul id="suggestions"></ul>
+  <div id="forecast"></div>
+
+  <!-- Подключение внешнего JavaScript-файла -->
+  <script src="script.js"></script>
+</body>
+</html>
