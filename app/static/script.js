@@ -2,6 +2,13 @@ const input = document.getElementById('city-input');
 const suggestions = document.getElementById('suggestions');
 const forecast = document.getElementById('forecast');
 
+// Проверяем, есть ли сохранённый город в localStorage
+const savedCity = JSON.parse(localStorage.getItem('lastCity'));
+if (savedCity) {
+  input.value = savedCity.name;
+  fetchWeather(savedCity.latitude, savedCity.longitude, savedCity.name);
+}
+
 let debounceTimer;
 
 input.addEventListener('input', () => {
@@ -30,7 +37,7 @@ input.addEventListener('input', () => {
       .catch(error => {
         console.error('Ошибка при получении подсказок:', error);
       });
-  }, 300); // Задержка для дебаунса
+  }, 300);
 });
 
 suggestions.addEventListener('click', (event) => {
@@ -54,9 +61,34 @@ function fetchWeather(lat, lon, cityName) {
         <p><strong>Температура:</strong> ${current.temperature_2m} °C</p>
         <p><strong>Скорость ветра:</strong> ${current.wind_speed_10m} км/ч</p>
       `;
+      localStorage.setItem('lastCity', JSON.stringify({
+        name: cityName,
+        latitude: lat,
+        longitude: lon
+      }));
+      fetch('/notify_backend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ city_name: cityName })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка при отправке данных на /notify_backend');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Уведомление успешно отправлено:', data);
+        })
+        .catch(error => {
+          console.error('Ошибка при отправке уведомления:', error);
+        });
     })
     .catch(error => {
       console.error('Ошибка при получении прогноза погоды:', error);
       forecast.innerHTML = '<p>Не удалось загрузить данные о погоде.</p>';
     });
 }
+
